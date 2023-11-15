@@ -1,0 +1,152 @@
+-- CREATE TABLE
+
+-- CREATE TABLE consumer_data AS
+-- SELECT
+--     FIRST_NAME,
+--     MI,
+--     LAST_NAME,
+--     ADDRESS,
+--     SUITE_APT,
+--     CITY,
+--     STATE,
+--     ZIP5,
+--     ZIP4,
+--     FIPS_STATE_CODE,
+--     FIPS_COUNTY_CODE,
+--     LATITUDE,
+--     LONGITUDE,
+--     ADDRESS_TYPE_INDICATOR,
+--     ADDRESS_LINE,
+--     TELEPHONE_NUMBER,
+--     TIME_ZONE,
+--     GENDER_CODE,
+--     DATE_OF_BIRTH_YEAR,
+--     DATE_OF_BIRTH_MONTH,
+--     DATE_OF_BIRTH_DAY,
+--     EXACT_AGE_BASED_OFF_DOB,
+--     INFERRED_AGE,
+--     INCOME_ESTIMATED_HOUSEHOLD,
+--     NET_WORTH,
+--     OCCUPATION,
+--     OCCUPATION_DETAIL,
+--     HEALTH_PRODUCTS_BUYER,
+--     BASEBALL_CARD_OR_SPORTS_MEMORABILIA_BUYER,
+--     HEALTHY_LIVING_ENTHUSIAST,
+--     RUNNING_ENTHUSIAST,
+--     BICYCLING_ENTHUSIAST,
+--     AVID_WALKER,
+--     EXERCISE_CLASS_ENTHUSIAST,
+--     AUTO_RACING_ENTHUSIAST,
+--     SPORTS_FAN,
+--     FOOTBALL_ENTHUSIAST,
+--     BASEBALL_ENTHUSIAST,
+--     BASKETBALL_ENTHUSIAST,
+--     HOCKEY_ENTHUSIAST,
+--     SOCCER_ENTHUSIAST,
+--     TENNIS_ENTHUSIAST,
+--     GOLF_ENTHUSIAST,
+--     SKIING_SNOWBOARDING_ENTHUSIAST,
+--     SWIMMING_ENTHUSIAST,
+--     MOTORCYCLING_ENTHUSIAST,
+--     NASCAR_ENTHUSIAST,
+--     BOATING_ENTHUSIAST,
+--     SCUBA_DIVING_ENTHUSIAST,
+--     SPORTING_GOODS_BUYER,
+--     HUNTING_PRODUCT_BUYER,
+--     AVID_FISHER,
+--     CAMPING_ENTHUSIAST,
+--     AVID_HUNTER,
+--     PERM_INDIVIDUAL_ID,
+--     EMAIL_ADDRESS,
+--     OPT_IN_IP,
+--     EMAIL_MATCH_TYPE,
+--     EMAIL_PRESENT,
+--     DELIVERABLE
+-- FROM
+--     ALESCO_CONSUMER_DATABASE_SAMPLE.PUBLIC.CONSUMER_TEST_DATA_VIEW;
+
+
+-- ALTER TABLE consumer_data
+-- ADD AGE_GROUP NVARCHAR(4000);
+
+--select top 10 * from consumer_data where first_name = 'HARRY';
+
+--columns = ['FOOTBALL_ENTHUSIAST', 'BASEBALL_ENTHUSIAST', 'BASKETBALL_ENTHUSIAST', 'HOCKEY_ENTHUSIAST', 'SOCCER_ENTHUSIAST', 'TENNIS_ENTHUSIAST', 'GOLF_ENTHUSIAST', 'SKIING_SNOWBOARDING_ENTHUSIAST', 'SWIMMING_ENTHUSIAST', 'MOTORCYCLING_ENTHUSIAST', 'NASCAR_ENTHUSIAST', 'BOATING_ENTHUSIAST', 'SCUBA_DIVING_ENTHUSIAST', 'SPORTING_GOODS_BUYER', 'HUNTING_PRODUCT_BUYER', 'AVID_FISHER', 'CAMPING_ENTHUSIAST', 'AVID_HUNTER', 'EXERCISE_CLASS_ENTHUSIAST', 'RUNNING_ENTHUSIAST', 'BICYCLING_ENTHUSIAST', 'AVID_WALKER']
+
+
+
+-- CREATE OR REPLACE FUNCTION CONCAT_COLUMN_NAMES(row1 OBJECT, columns ARRAY)
+-- RETURNS STRING
+-- LANGUAGE PYTHON
+-- runtime_version = '3.8'
+-- handler = 'concat_fun'
+-- AS
+-- $$
+-- def concat_fun(row1, columns):
+--     result = ''
+--     for column in columns:
+--         if column in row1 and row1[column] == 'Y':
+--             if '_ENTHUSIAST' in column:
+--                 result += column.split('_ENTHUSIAST')[0] + ','
+--             else:
+--                 result += column + ','
+--     return result.strip()  # Remove trailing space
+-- $$;
+
+-- UPDATE BIGDATA.PUBLIC.CONSUMER_DATA
+-- SET COMBINED_ENTHUSIAST = CONCAT_COLUMN_NAMES((SELECT OBJECT_CONSTRUCT(*) FROM consumer_data WHERE FIRST_NAME = 'HARRY'),       ARRAY_CONSTRUCT('FOOTBALL_ENTHUSIAST', 'BASEBALL_ENTHUSIAST', 'BASKETBALL_ENTHUSIAST','HOCKEY_ENTHUSIAST', 'SOCCER_ENTHUSIAST', 'TENNIS_ENTHUSIAST','GOLF_ENTHUSIAST', 'SKIING_SNOWBOARDING_ENTHUSIAST', 'SWIMMING_ENTHUSIAST','MOTORCYCLING_ENTHUSIAST', 'NASCAR_ENTHUSIAST', 'BOATING_ENTHUSIAST','SCUBA_DIVING_ENTHUSIAST', 'SPORTING_GOODS_BUYER', 'HUNTING_PRODUCT_BUYER','AVID_FISHER', 'CAMPING_ENTHUSIAST', 'AVID_HUNTER','EXERCISE_CLASS_ENTHUSIAST', 'RUNNING_ENTHUSIAST', 'BICYCLING_ENTHUSIAST','AVID_WALKER')
+-- ) 
+-- WHERE FIRST_NAME = 'HARRY';
+
+
+--SELECT combined_enthusiast, age_group FROM consumer_data WHERE FIRST_NAME = 'HARRY';
+
+-- CREATE OR REPLACE FUNCTION AGE_GROUP(age int)
+-- RETURNS STRING
+-- LANGUAGE PYTHON
+-- runtime_version = '3.8'
+-- handler = 'age_grouper'
+-- AS
+-- $$
+-- def age_grouper(age):
+--     if 0 <= age <= 17:
+--         return 'Under 18'
+--     elif 18 <= age <= 34:
+--         return '18-34'
+--     elif 35 <= age <= 54:
+--         return '35-54'
+--     elif age > 54:
+--         return '55+'
+--     return 'Unknown'
+-- $$;
+
+
+-- select AGE_GROUP(20);
+
+-- UPDATE BIGDATA.PUBLIC.CONSUMER_DATA
+-- SET age_group = AGE_GROUP(select exact_age_based_off_dob from BIGDATA.PUBLIC.CONSUMER_DATA WHERE FIRST_NAME = 'HARRY')
+-- WHERE FIRST_NAME = 'HARRY';
+
+
+--CREATE OR REPLACE VIEW app_usage_customer_lifestyle AS
+-- SELECT
+--     a.AGE_RANGE,
+--     SUM(CASE WHEN c.sports_fan = 'Y' THEN 1 ELSE 0 END) AS sports_fan_count
+-- FROM
+--     BIGDATA.PUBLIC.APP_USAGE a
+-- JOIN
+--     BIGDATA.PUBLIC.CONSUMER_DATA c 
+-- ON 
+--     a.STATE = c.STATE
+-- WHERE  
+--     c.sports_fan = 'Y'
+-- GROUP BY 
+--     a.AGE_RANGE;
+
+-- show warehouses;
+
+
+--select * from app_usage;
+
+--select top 1 * from BIGDATA.PUBLIC.CONSUMER_DATA;
+
