@@ -26,6 +26,7 @@ def get_snowpark_session() -> Session:
     # if using snowsql config, like snowcli does
     elif os.path.exists(os.path.expanduser('~/.snowsql/config')):
         snowpark_config = get_snowsql_config()
+        print(snowpark_config)
         SnowflakeConnection().connection = Session.builder.configs(snowpark_config).create()
     # otherwise configure from environment variables
     elif "SNOWSQL_ACCOUNT" in os.environ:

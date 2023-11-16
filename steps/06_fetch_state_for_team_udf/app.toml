@@ -1,6 +1,18 @@
-input_parameters = "(team_name str)"
-return_type = "str"
+snowsql_config_path = "~/.snowsql/config"
+snowsql_connection_name = "dev"
+
+[default]
+input_parameters = "(team_name string)"
+return_type = "string"
 file = "app.zip"
 name = "fetch_state_for_team_udf"
 handler = "app.main"
 execute_as_caller = true
+
+
+[dev]
+database = "TEAM2_DB"
+schema = "NFL_SPONSOR"
+warehouse = "TEAM2_DW"
+role = "TEAM2_ROLE"
+overwrite = true
