@@ -10,7 +10,7 @@ handler = "app.get_active_behaviors"
 execute_as_caller = true
 
 [dev]
-database = "CONSUMER_INFO"
+database = "TEAM2_DB"
 schema = "CONSUMER_INFO"
 warehouse = "TEAM2_DW"
 role = "TEAM2_ROLE"
