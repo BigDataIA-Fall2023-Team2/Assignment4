@@ -1,0 +1,6 @@
+input_parameters = "(team_name str)"
+return_type = "str"
+file = "app.zip"
+name = "fetch_state_for_team_udf"
+handler = "app.main"
+execute_as_caller = true
