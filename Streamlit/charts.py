@@ -16,7 +16,7 @@ from dotenv import load_dotenv
 def get_charts():
     conn_params = {
         'user': os.getenv('user_login_name'),
-        'password': os.getenv('password'),
+        'password': os.getenv('password_snowflake'),
         'account': os.getenv('account_identifier'),
         'warehouse': os.getenv('warehouse_name'),
         'database': os.getenv('database_name'),
