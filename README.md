@@ -4,6 +4,8 @@
 
 In this application, the user will ask a question related to data stored in data warehouse in english language. The application will convert the english statement into SQL query and will get exectued against the snowflake databases. The results will be then displayed on the application.
 
+The app also displays some useful analytics to give an idea of the data and insights
+
 ### Application and Documentation Link
 
 App link - https://team2assignment4.streamlit.app/
