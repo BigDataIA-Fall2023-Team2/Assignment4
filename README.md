@@ -12,7 +12,7 @@ App link - https://team2assignment4.streamlit.app/
 
 ### Project Resources
 
-Project Demo - 
+Project Demo - https://youtu.be/vD6DeUaKKtI
 
 Project Codelabs - https://codelabs-preview.appspot.com/?file_id=1Ha-GJvJ_4nNn4plrQz33fCVaaJjFb73ZpVk_N4qm_xs#0
 
