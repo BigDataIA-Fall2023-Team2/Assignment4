@@ -1,12 +1,10 @@
-import streamlit as st
-import pandas as pd
-import numpy as np
-# from langchain.prompts import PromptTemplate
+import streamlit as st, pandas as pd, numpy as np, ast
 from langchain.utilities import SQLDatabase
 from langchain.llms import OpenAI
 from langchain_experimental.sql import SQLDatabaseChain
 from langchain.chat_models import ChatOpenAI
 from langchain.chains import create_sql_query_chain
+from charts import get_charts
 
 
 from langchain.utilities import SQLDatabase
@@ -36,9 +34,6 @@ role_name = os.getenv('role_name')
 
 
 
-db = SQLDatabase.from_uri(f"snowflake://{user_login_name}:{password}@{account_identifier}/{database_name}/{schema_name}?warehouse={warehouse_name}&role={role_name}")
-
-
 def build_query_chain(dialect, table_info, few_shot_examples, user_question):
 
     few_shot_examples_str = "\n".join(
@@ -48,7 +43,7 @@ def build_query_chain(dialect, table_info, few_shot_examples, user_question):
     prompt = create_prompt(user_question, few_shot_examples_str, table_info, dialect)
 
     # Create a SQL query chain
-    chain = create_sql_query_chain(ChatOpenAI(temperature=0, openai_api_key=OPENAI_API_KEY), db)
+    chain = create_sql_query_chain(ChatOpenAI(temperature=0, openai_api_key=OPENAI_API_KEY), st.session_state['db'])
     response = chain.invoke({"question": prompt})
     return response
 
@@ -73,30 +68,75 @@ def create_prompt(input_text, examples_text, table_info, dialect):
     return template.format(input_text=input_text, few_shot_examples=examples_text, table_info=table_info, dialect=dialect)
 
 
-dialect = "SQL"
-table_info = db.get_table_info()
-few_shot_examples = [
-    {"question": "Display all rows in app information table", "query": "SELECT * FROM APP_VISIT;"},
-    {"question": "Retrieve Apps with Longest Average Usage Duration", "query": "SELECT app_name, AVG(duration_sec) AS avg_duration FROM your_table_name GROUP BY app_name ORDER BY avg_duration DESC;"},
-    {"question": "Tell me count of Records for Each App Category", "query": "SELECT app_category, COUNT(*) AS record_count FROM your_table_name GROUP BY app_category;"},
-]
+def load_adhoc_query_configs():
+    db = SQLDatabase.from_uri(f"snowflake://{user_login_name}:{password}@{account_identifier}/{database_name}/{schema_name}?warehouse={warehouse_name}&role={role_name}")
+    dialect = "SQL"
+    table_info = ''
+    for table_name in ['CONSUMER_DATA', 'PANELIST_APP_USAGE', 'SPONSORSHIP_APPUSAGES_CORR', 'SPONSOR_EXPOSURE']:
+        table_info = table_info + table_name + " schema :" + db.run(f"SELECT COLUMN_NAME, DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '{table_name}'") + ". \n"
+        print(table_info)
+    few_shot_examples = [
+        {"question": "Display all rows in Consumer table", "query": "SELECT * FROM CONSUMER_DATA;"},
+        {"question": "Display all rows in app usage table", "query": "SELECT * FROM PANELIST_APP_USAGE;"},
+        {"question": "Display all rows in Sponser - app usages correlation table", "query": "SELECT * FROM SPONSORSHIP_APPUSAGES_CORR;"},
+        ]
+    
+    return db, dialect, table_info, few_shot_examples
 
+def adhoc_query_page():
+    st.title('Welcome to NFL Sponsor Performance Analysis')
+    st.write('What would you like to know about the data')
+    if 'table_info' not in st.session_state:
+        st.session_state['db'], st.session_state['dialect'], st.session_state['table_info'], st.session_state['few_shot_examples'] = load_adhoc_query_configs()
 
-st.title("Langchain Query Writer")
-user_query = st.text_input("Enter the question you want to ask", key="query_input")
-# user_question = "what is the count of records for each app?"
+    st.session_state['user_query'] = st.text_input("Enter the question you want to ask", key="query_input")
 
-# Build and execute the SQL query chain
-response = build_query_chain(dialect, table_info, few_shot_examples, user_query)
-print(response)
+    if st.button("Get Query"):
+        if 'user_modified_question' in st.session_state:
+            del st.session_state['user_modified_question'] 
+        st.session_state['user_response'] = build_query_chain(st.session_state['dialect'], st.session_state['table_info'], st.session_state['few_shot_examples'], st.session_state['user_query'])
+        print(st.session_state['user_response'])
 
-modified_question = st.text_area("Modify the question", key="modified_question", value=response)
+    st.session_state['user_modified_question']  = st.text_area("Modify the question", value=st.session_state.get('user_response', ''))
 
-if st.button("Ask"):
-    if user_query:
-        st.write("Original Question:", user_query)
+    if hasattr(st.session_state, 'user_query') and st.session_state['user_query'] != '':
+        if st.button("Execute Query") :
+            query_response= st.session_state['db'].run(st.session_state['user_modified_question'])
+            df = pd.DataFrame(ast.literal_eval(query_response))
+            st.dataframe(df)
+        
+    if st.button("Return Home"):
+        st.session_state['page'] = 'landing' 
+        st.rerun()  
+        
+def charts_page():
+    get_charts()
+    if st.button("Return Home"):
+        st.session_state['page'] = 'landing' 
+        st.rerun()  
 
-    if modified_question:
-        st.write("Modified Question:", modified_question)
+def landing_page():
+    if 'user_query' in st.session_state:
+        del st.session_state['user_query']
+    st.title('Welcome to NFL Sponsor Performance Analysis')
+    
+    st.write("What would you like to do today")
+    if st.button('See general analysis and dashboards'):
+        st.session_state['page'] = 'charts' 
+        st.rerun()    
+    if st.button('Run adhoc queries'):
+        st.session_state['page'] = 'adhoc_query' 
+        st.rerun()  
 
-    st.write(db.run(modified_question))
+def main():
+    if 'page' not in st.session_state:
+        st.session_state['page'] = 'landing'    
+    if st.session_state['page'] == 'landing':
+        landing_page()
+    elif st.session_state['page'] == 'charts':
+        charts_page()
+    elif st.session_state['page'] == 'adhoc_query':
+        adhoc_query_page()
+
+if __name__ == '__main__':
+    main()
