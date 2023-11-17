@@ -63,6 +63,7 @@ Proof of Concept (https://docs.google.com/document/d/1N0K34Oohp1onvOfS91-UuH7-uU
 
 ### Repository Structure
 
+![image](Snowflake_Streamlit_Tree.png)
 
 ### Contributions
 
