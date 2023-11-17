@@ -17,11 +17,8 @@ import requests, pathlib, os
 from dotenv import load_dotenv
 
 
-env_path = pathlib.Path('.') / '.env'
-load_dotenv(dotenv_path=env_path)
-
-# OPENAI_API_KEY = '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'
-# 'snowflake://<user_login_name>:<password>@<account_identifier>/<database_name>/<schema_name>?warehouse=<warehouse_name>&role=<role_name>'
+# env_path = pathlib.Path('.') / '.env'
+# load_dotenv(dotenv_path=env_path)
 
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 user_login_name = os.getenv('user_login_name')
