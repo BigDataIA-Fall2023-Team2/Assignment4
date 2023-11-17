@@ -1,5 +1,16 @@
 # Assignment4
 
+## Assignment - Part 1
+
+| Name                            | Link                                                                             |           
+| ------------------------------- | ---------------------------------------------------------------------------------|
+| Shardul Chavan                  | https://github.com/shardulchavan/sfguide-data-engineering-with-snowpark-python   | 
+| Chinmay Gandi                   | https://github.com/chinmaygandi/sfguide-data-engineering-with-snowpark-python    | 
+| Dhawal Negi                     | https://github.com/dhawalnegi1/data-engineering-with-snowpark-python             |                                                  
+
+
+## Assignment - Part 2 
+
 ### Project Descrition 
 
 In this application, the user will ask a question related to data stored in data warehouse in english language. The application will convert the english statement into SQL query and will get exectued against the snowflake databases. The results will be then displayed on the application.
@@ -76,4 +87,5 @@ Proof of Concept (https://docs.google.com/document/d/1N0K34Oohp1onvOfS91-UuH7-uU
 
 ### Additional Notes
 WE ATTEST THAT WE HAVEN’T USED ANY OTHER STUDENTS’ WORK IN OUR ASSIGNMENT AND ABIDE BY THE POLICIES LISTED IN THE STUDENT HANDBOOK. 
+
 
