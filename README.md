@@ -35,12 +35,11 @@ The user will ask a question related to the data in snowflake. The question whic
   App usage : APP_USES
   NFL post sponsership : NFL_SPONSER
 
-2) Now to load the data from the individual schemas we run 3 different scripts. 
+2) Now to load the data from the individual schemas we run 3 different scripts.   The script copy the data and load it into various schemas that were mentioned above. 
+
   Consumer data : 03_load_consumer_info_data.sql
   App usage : 04_load_app_usage_data.sql
   NFL post sponsership : 02_load_nfl_sponser_data.sql
-
-  The script copy the data and load it into various schemas that were mentioned above. 
 
 3) We then run the 05_create_nfl_team_state_lookup_table.sql to create lookup state table that contains value of the NFL teams and respective state it belongs to.
 
