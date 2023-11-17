@@ -21,7 +21,7 @@ Python | Streamlit | Snowflake | Langchain | OPENAI
 
 ### Architecture diagram ###
 
-![image](https://github.com/BigDataIA-Fall2023-Team2/Assignment4/assets/131703516/3590949a-c9eb-486f-9ce6-3d475b41fd98)
+![image](Snowflake_Streamlit_Architecture.png)
 
 
 ### Project Flow
