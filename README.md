@@ -14,6 +14,8 @@ App link - https://team2assignment4.streamlit.app/
 
 Project Demo - 
 
+Project Codelabs - https://codelabs-preview.appspot.com/?file_id=1Ha-GJvJ_4nNn4plrQz33fCVaaJjFb73ZpVk_N4qm_xs#0
+
 Proof of Concept - https://docs.google.com/document/d/1N0K34Oohp1onvOfS91-UuH7-uUOE0VP_1edQ5f1bfcY/edit
 
 ### Tech Stack
