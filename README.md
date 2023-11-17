@@ -25,6 +25,7 @@ Python | Streamlit | Snowflake | Langchain | OPENAI
 
 ![image](Snowflake_Streamlit_Architecture.png)
 
+![image](snowflake_internal_architecture.png)
 
 ### Project Flow
 
