@@ -43,3 +43,4 @@ INSERT INTO TEAM_STATE_LOOKUP (TEAM_NAME, STATE_CODE) VALUES
 ('Tampa Bay Buccaneers', 'FL'),
 ('Tennessee Titans', 'TN'),
 ('Washington Commanders', 'DC');
+
