@@ -81,7 +81,7 @@ Proof of Concept (https://docs.google.com/document/d/1N0K34Oohp1onvOfS91-UuH7-uU
 
 | Name                            | Contribution                                                                 |  
 | ------------------------------- | -----------------------------------------------------------------------------|
-| Shardul Chavan                  | Langchain and Streamlit integration                                          | 
+| Shardul Chavan                  | Snowflake, Langchain and Streamlit integration                                          | 
 | Chinmay Gandi                   | Snowflake - SQL process, UDF Function                                        | 
 | Dhawal Negi                     | Snowflake - SQL process, UDF Function, Stored Procedure                      |                                                  
 
